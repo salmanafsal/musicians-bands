@@ -1,6 +1,5 @@
 const path = require('path');
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const {Band} = require ('./models/Band.js')
 
 // TODO - create the new sequelize connection
 
