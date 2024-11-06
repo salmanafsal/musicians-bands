@@ -1,5 +1,5 @@
 const {Sequelize, Model, DataTypes, db} = require('../db.js');
-const {  } = require('sequelize');
+
 
 
 // TODO - define the Band model
