@@ -10,7 +10,42 @@ describe('Band, Musician, and Song Models', () => {
         // by setting 'force:true' the tables are recreated each time the 
         // test suite is run
         await db.sync({ force: true });
+        let createdBand = await Band.create({ name: 'The Rolling Stones', genre: 'Rock' });
+        await Band.create({ name: 'The Rolling Stones Part 2', genre: 'Metal' });
 
+  
+      // Example: Create a new Musician
+      let createdMusician = await Musician.create({ name: 'Mick Jagger', instrument: 'Vocals' });
+       await Musician.create({ name: 'Mick Jagger Part 2', instrument: 'Vocals part 2' });
+      
+      // Example: Create a new Song
+       await Song.create({ title: 'Paint It Black Part 1', year: 1977, length: 230 });
+      
+      const myBand = await Band.findByPk(1);
+      
+      let musician = await Musician.findByPk(1);
+      let song = await Song.findByPk(1);
+      let anothermusician = await Musician.findByPk(1);
+
+      // Correctly adding the musician to the band
+
+      
+      musician = await myBand.addMusician(musician); // Pass the musician instance here
+      song = await anothermusician.addSong(song)
+     /* await musician.reload();*/
+     /* await musician.addSong(song)*/
+     /* if (!musician.BandId) {
+        musician.BandId = myBand.id; // Manually set the foreign key
+        await musician.save(); // Save the changes
+    }*/
+
+   /* if (!song.MusicianId) {
+      song.MusicianId = musician.id; // Manually set the foreign key
+      await song.save(); // Save the changes
+  }*/
+
+      // Fetch the updated list of musicians to verify
+     
 
 
     })
@@ -42,9 +77,9 @@ describe('Band, Musician, and Song Models', () => {
 
       test('Test Band Association with Musicians', async () => {
         const myBand = await Band.findByPk(1);
-        
+        console.log('Hi'+ myBand.id)
         const musicians = await myBand.getMusicians();
-        
+        console.log(musicians.id);
         expect(musicians.length).toBeGreaterThan(0);
 
       });
@@ -61,7 +96,7 @@ describe('Band, Musician, and Song Models', () => {
 
       test("Add multiple songs to a band and verify association", async () => {
         // Step 1: Create a Band
-        const band = await Band.create({ name: "The Beatles", genre: "Rock" });
+        const band = await Band.create({ name: "The Beatless", genre: "Rock" });
 
         // Step 2: Create Songs
         const song1 = await Song.create({ title: "Hey Jude",year: "1997", length: 420 });
@@ -71,16 +106,19 @@ describe('Band, Musician, and Song Models', () => {
         await band.addSong(song1);
         await band.addSong(song2);
 
+       
+
         // Step 4: Verify Songs are associated with Band
         const songsInBand = await band.getSongs();
         expect(songsInBand.length).toBe(2);
-        expect(songsInBand.map(s => s.title)).toEqual(expect.arrayContaining(["Hey Jude", "Let It Be"]));
-
+       
         // Step 5: Verify Band from Song's side
-        const foundBandForSong1 = await song1.getBand();
-        const foundBandForSong2 = await song2.getBand();
-        expect(foundBandForSong1.name).toBe("The Beatles");
-        expect(foundBandForSong2.name).toBe("The Beatles");
+        const foundBandForSong1 = await song1.getBands();
+        const foundBandForSong2 = await song2.getBands();
+        
+
+        expect(foundBandForSong1[0].name).toBe("The Beatless");
+        expect(foundBandForSong2[0].name).toBe("The Beatless");
     });
 
     

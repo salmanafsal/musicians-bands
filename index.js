@@ -15,6 +15,7 @@ Musician.hasMany(Song)
 Song.belongsTo(Musician)
 
 
+
 async function initialize() {
     try {
       // Sync the database
@@ -22,36 +23,36 @@ async function initialize() {
   
       // Example: Create a new Band
       let createdBand = await Band.create({ name: 'The Rolling Stones', genre: 'Rock' });
-       createdBand = await Band.create({ name: 'The Rolling Stones Part 2', genre: 'Metal' });
+        await Band.create({ name: 'The Rolling Stones Part 2', genre: 'Metal' });
 
-      console.log('Created Band:', createdBand);
   
       // Example: Create a new Musician
       let createdMusician = await Musician.create({ name: 'Mick Jagger', instrument: 'Vocals' });
-      createdMusician = await Musician.create({ name: 'Mick Jagger Part 2', instrument: 'Vocals part 2' });
-      console.log('Created Musician:', createdMusician);
-  
+       await Musician.create({ name: 'Mick Jagger Part 2', instrument: 'Vocals part 2' });
+      
       // Example: Create a new Song
       let  createdSong = await Song.create({ title: 'Paint It Black', year: 1966, length: 210 });
-      createdSong = await Song.create({ title: 'Paint It Black Part 1', year: 1977, length: 230 });
-      console.log('Created Song:', createdSong);
-
+       await Song.create({ title: 'Paint It Black Part 1', year: 1977, length: 230 });
+      
       const myBand = await Band.findByPk(1);
       
       let musician = await Musician.findByPk(1);
       let song = await Song.findByPk(1);
       // Correctly adding the musician to the band
-      await myBand.addMusician(musician); // Pass the musician instance here
-      await musician.addSong(song)
-      if (!musician.BandID) {
+
+      
+      musician = await myBand.addMusician(musician); // Pass the musician instance here
+      await musician.reload();
+     /* await musician.addSong(song)*/
+      if (!musician.BandId) {
         musician.BandId = myBand.id; // Manually set the foreign key
         await musician.save(); // Save the changes
     }
 
-    if (!song.MusicianID) {
+   /* if (!song.MusicianId) {
       song.MusicianId = musician.id; // Manually set the foreign key
       await song.save(); // Save the changes
-  }
+  }*/
 
       // Fetch the updated list of musicians to verify
       const associatedMusicians = await myBand.getMusicians();
